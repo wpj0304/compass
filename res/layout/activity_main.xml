@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="70dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/view_compass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/prompt"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/layout_direction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:contentDescription="@string/imageview" />
+
+            <LinearLayout
+                android:id="@+id/pos_direction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:contentDescription="@string/imageview" />
+
+            <LinearLayout
+                android:id="@+id/layout_angle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center" >
+
+            <com.general.compass.CompassView
+                android:id="@+id/compass_pointer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/compass_cn" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/cover"
+                android:src="@drawable/compass_arrow" />
+        </FrameLayout>
+    </LinearLayout>
+    
+    <!-- 经纬度显示区 -->
+    <TextView
+        android:id="@+id/location_show"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#7FFFFFFF" />
+
+    <!-- 地址显示区 -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/background_bottom"
+        android:orientation="vertical"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/textview_location"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/getting_location"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#7FFFFFFF" />
+    </LinearLayout>
+
+</LinearLayout>
