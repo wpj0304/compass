@@ -7,7 +7,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.networkbench.agent.impl.NBSAppAgent;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -103,7 +102,6 @@ public class MainActivity extends Activity implements SensorEventListener
 		setContentView(R.layout.activity_main);
 		lParams = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		initData();// 初始化传感器
-		NBSAppAgent.setLicenseKey("25f9f630bc8c4134b4d3a87214f78d28").withLocationServiceEnabled(true).start(this);
 		
 		mLocationClient = new LocationClient(getApplicationContext()); // 声明LocationClient类
 		mLocationClient.registerLocationListener(myListener); // 注册监听函数
@@ -228,9 +226,12 @@ public class MainActivity extends Activity implements SensorEventListener
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
 			// 调用退屏广告
+			return super.onKeyDown(keyCode, event);
 		}
 		return false;
 	}
+	
+	
 
 	// 位置信息更新监听
 	LocationListener mLocationListener = new LocationListener()
