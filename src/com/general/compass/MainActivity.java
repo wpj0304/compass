@@ -7,6 +7,8 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.onlineconfig.OnlineConfigAgent;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -115,6 +117,11 @@ public class MainActivity extends Activity implements SensorEventListener
 		mLocationClient.setLocOption(option);// 使用设置
 		mLocationClient.start();// 开启定位SDK
 		mLocationClient.requestLocation();// 开始请求位置
+		
+		// 友盟在线参数
+		OnlineConfigAgent.getInstance().updateOnlineConfig(this);
+		String showAdc = OnlineConfigAgent.getInstance().getConfigParams(this, "show_adv"); // 是否显示广告
+		
 	}
 
 	@Override
@@ -144,7 +151,7 @@ public class MainActivity extends Activity implements SensorEventListener
 	protected void onResume()// 我们在onResume方法中创建一个方向传感器，并向系统注册监听器
 	{                        // 在恢复的生命周期里判断、启动位置更新服务和传感器服务
 		super.onResume();
-
+		MobclickAgent.onResume(this);
 		if (stringProvider != null)
 		{
 			updateLocation(lManager.getLastKnownLocation(stringProvider));
@@ -171,6 +178,7 @@ public class MainActivity extends Activity implements SensorEventListener
 	protected void onPause()
 	{
 		super.onPause();
+		MobclickAgent.onPause(this);
 		mStopDrawing = true;
 		lManager.removeUpdates(mLocationListener);
 		// 注销所有传感器的监听
