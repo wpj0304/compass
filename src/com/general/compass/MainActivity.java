@@ -7,6 +7,8 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.general.waps.Advertisement;
+import com.general.waps.QuitPopAd;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 
@@ -59,6 +61,7 @@ public class MainActivity extends Activity implements SensorEventListener
 	private String loc = null; // 保存定位信息
 	public LocationClient mLocationClient = null;
 	public BDLocationListener myListener = new MyLocationListener();
+	boolean advState = false;
 	
 	// 这个是更新指南针旋转的线程，handler的灵活使用，每10毫秒检测方向变化值，对应更新指南针旋转
 	protected Runnable mCompassViewUpdater = new Runnable()
@@ -121,7 +124,23 @@ public class MainActivity extends Activity implements SensorEventListener
 		// 友盟在线参数
 		OnlineConfigAgent.getInstance().updateOnlineConfig(this);
 		String showAdc = OnlineConfigAgent.getInstance().getConfigParams(this, "show_adv"); // 是否显示广告
-		
+		// 广告 ------------
+		if ("0".equals(showAdc))
+		{
+			advState = true;
+		}
+		if (advState)
+		{
+			// 悬浮窗 开关
+			String floatValue = OnlineConfigAgent.getInstance().getConfigParams(this, "float_view");// 是否显示积分墙
+			boolean floatState = false;
+			if ("0".equals(floatValue))
+			{
+				floatState = true;
+			}
+			Advertisement.getInstance(this).showAdSelectad(true, floatState, true);
+		}
+
 	}
 
 	@Override
@@ -234,7 +253,14 @@ public class MainActivity extends Activity implements SensorEventListener
 		if (keyCode == KeyEvent.KEYCODE_BACK)
 		{
 			// 调用退屏广告
-			return super.onKeyDown(keyCode, event);
+			if(advState)
+			{
+				QuitPopAd.getInstance().show(this);
+			}
+			else
+			{
+				return super.onKeyDown(keyCode, event);
+			}
 		}
 		return false;
 	}
@@ -566,6 +592,7 @@ public class MainActivity extends Activity implements SensorEventListener
 	{
 		stopListener();//停止监听
 		super.onDestroy();
+		Advertisement.getInstance(this).close();
 	}
 
 	/*
