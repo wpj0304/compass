@@ -32,7 +32,7 @@ public class Advertisement
 	private static void init()
 	{
 		final String APP_ID = "1b2717d6009a0aa55356cc498e924e7c"; // 应用标识
-		final String APP_PID = "baidu"; // 分发渠道标识
+		final String APP_PID = "360"; // 分发渠道标识
 		AppConnect.getInstance(APP_ID, APP_PID, context);// 初始化统计器，并通过代码设置APP_ID,
 	}
 

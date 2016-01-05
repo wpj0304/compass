@@ -23,6 +23,8 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.app.Activity;
 import android.content.Context;
 import android.view.KeyEvent;
@@ -62,6 +64,9 @@ public class MainActivity extends Activity implements SensorEventListener
 	public LocationClient mLocationClient = null;
 	public BDLocationListener myListener = new MyLocationListener();
 	boolean advState = false;
+	private int checkCount = 0;// 检查广告是否开启次数
+	private final int CC_AD_MAXC = 3; // 检查次数
+	private Handler mHandler;
 	
 	// 这个是更新指南针旋转的线程，handler的灵活使用，每10毫秒检测方向变化值，对应更新指南针旋转
 	protected Runnable mCompassViewUpdater = new Runnable()
@@ -120,16 +125,21 @@ public class MainActivity extends Activity implements SensorEventListener
 		mLocationClient.setLocOption(option);// 使用设置
 		mLocationClient.start();// 开启定位SDK
 		mLocationClient.requestLocation();// 开始请求位置
-		
+		Looper looper = Looper.myLooper();
+		mHandler = new MessageHandler(looper);
+		showAd();
+	}
+	private void showAd()
+	{
 		// 友盟在线参数
 		OnlineConfigAgent.getInstance().updateOnlineConfig(this);
 		String showAdc = OnlineConfigAgent.getInstance().getConfigParams(this, "show_adv"); // 是否显示广告
 		// 广告 ------------
-		if ("0".equals(showAdc))
+		if("0".equals(showAdc))
 		{
 			advState = true;
 		}
-		if (advState)
+		if(advState)
 		{
 			// 悬浮窗 开关
 			String floatValue = OnlineConfigAgent.getInstance().getConfigParams(this, "float_view");// 是否显示积分墙
@@ -140,7 +150,26 @@ public class MainActivity extends Activity implements SensorEventListener
 			}
 			Advertisement.getInstance(this).showAdSelectad(true, floatState, true);
 		}
-
+		if(!advState && checkCount < CC_AD_MAXC)
+		{
+			// 广告未加载再次检查
+			checkCount++;
+			
+			new Thread(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					try
+					{
+						Thread.sleep(2000);
+					} catch (Exception e)
+					{}
+					 Message message = Message.obtain();
+					 mHandler.sendMessage(message);
+				}
+			}).start();
+		}
 	}
 
 	@Override
@@ -636,4 +665,16 @@ public class MainActivity extends Activity implements SensorEventListener
 			mLocationClient = null;
 		}
 	}
+	
+	 //子类化一个Handler
+    class MessageHandler extends Handler {
+        public MessageHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+        	showAd();
+        }
+    }
 }
